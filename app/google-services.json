@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "117980855343",
+    "project_id": "exam-practice-cdd87",
+    "storage_bucket": "exam-practice-cdd87.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:117980855343:android:f4b1f0a448d071eba09ada",
+        "android_client_info": {
+          "package_name": "com.example.exampractice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "117980855343-0pii1n0up4ggctei2t95mnnn8bb7icq4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.exampractice",
+            "certificate_hash": "eff3d96b1f8c5782511ebe6a5f02e1a8ca1dde49"
+          }
+        },
+        {
+          "client_id": "117980855343-qiridol0q7fkp9a4sdlsvk2st0i5hc31.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhDQpitioQbjVgsvHNgbAsKSxbyBLbot4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "117980855343-fim3odg62biphnrvvfmnp4s6mpfo4jer.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
