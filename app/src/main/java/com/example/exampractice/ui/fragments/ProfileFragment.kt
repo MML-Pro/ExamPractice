@@ -82,6 +82,7 @@ class ProfileFragment : Fragment() {
                         redirectToMainActivity()
                     }
                     else -> {
+                        firebaseAuth.signOut()
                         Log.d(TAG, "onViewCreated: ${currentUser.providerData[i].providerId}")
                         redirectToMainActivity()
                         return@setOnClickListener
