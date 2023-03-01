@@ -18,7 +18,7 @@
         android:top="-200dp"
         >
         <shape android:shape="oval">
-            <solid android:color="@color/purple_500">
+            <solid android:color="@color/blue_500">
 
             </solid>
 

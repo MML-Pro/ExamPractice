@@ -3,22 +3,17 @@ package com.example.exampractice.ui.fragments
 import CategoryAdapter
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
-import com.example.exampractice.R
 import com.example.exampractice.databinding.FragmentCategoryBinding
 import com.example.exampractice.models.CategoryModel
 import com.example.exampractice.util.Resource
-import com.example.exampractice.util.TestUtil
-import com.example.exampractice.viewmodels.DbQueryViewModel
+import com.example.exampractice.viewmodels.CategoriesViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 private const val TAG = "CategoryFragment"
 
@@ -33,7 +28,7 @@ class CategoryFragment : Fragment() {
     }
     private lateinit var adapter: CategoryAdapter
 
-    private val viewModel by viewModels<DbQueryViewModel>()
+    private val viewModel by viewModels<CategoriesViewModel>()
 
 
     override fun onCreateView(
@@ -51,7 +46,7 @@ class CategoryFragment : Fragment() {
 
         loadCategories()
 
-//        Log.d(TAG, "onCreateView: cat list size is ${categoryList.size}")
+//        Log.d(TAG, "onCreateView: cat list size is ${testList.size}")
 
 
         binding.categoryGridView.adapter = adapter

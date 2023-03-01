@@ -7,15 +7,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.exampractice.databinding.TestItemLayoutBinding
 import com.example.exampractice.models.TestModel
-import com.example.exampractice.util.TestUtil
 
 
-class TestAdapter() : RecyclerView.Adapter<TestAdapter.TestViewHolder>() {
+class TestAdapter : RecyclerView.Adapter<TestAdapter.TestViewHolder>() {
 
     private val diffCallback: DiffUtil.ItemCallback<TestModel> =
         object : DiffUtil.ItemCallback<TestModel>() {
             override fun areItemsTheSame(oldItem: TestModel, newItem: TestModel): Boolean {
-                return oldItem === newItem
+                return oldItem.testId == newItem.testId
             }
 
             override fun areContentsTheSame(oldItem: TestModel, newItem: TestModel): Boolean {

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.exampractice.adapters.TestAdapter
@@ -15,10 +16,10 @@ import com.example.exampractice.databinding.FragmentTestBinding
 import com.example.exampractice.models.TestModel
 import com.example.exampractice.ui.activites.HomeActivity
 import com.example.exampractice.util.Resource
-import com.example.exampractice.util.TestUtil
 import com.example.exampractice.util.onItemClick
-import com.example.exampractice.viewmodels.DbQueryViewModel
+import com.example.exampractice.viewmodels.TestViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 
 private const val TAG = "TestFragment"
@@ -33,9 +34,15 @@ class TestFragment : Fragment() {
 
     private lateinit var adapter: TestAdapter
 
-    private val viewModel by viewModels<DbQueryViewModel>()
+    private val testViewModel by viewModels<TestViewModel>()
 
-    private var position: Int = 0
+    //    companion object{
+    private var testList = arrayListOf<TestModel>()
+
+    private var testPosition: Int = 0
+
+    private var topScore:Int=0
+//    }
 
 
     override fun onCreateView(
@@ -49,7 +56,8 @@ class TestFragment : Fragment() {
         (requireActivity() as HomeActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         adapter = TestAdapter()
-        viewModel.loadTestData(args.categoryPosition)
+
+        setUpRecyclerView()
 
         return binding.root
     }
@@ -57,29 +65,73 @@ class TestFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        testList.add(TestModel("1",50,20))
-//        testList.add(TestModel("2",80,20))
-//        testList.add(TestModel("3",0,25))
-//        testList.add(TestModel("4",10,40))
 
+
+        testViewModel.loadTestData(args.categoryIndex)
 
         lifecycleScope.launchWhenStarted {
-            viewModel.testList.collect{
-                when(it){
-                    is Resource.Success ->{
-                        adapter.asyncListDiffer.submitList(it.data)
+            testViewModel.testList.collect {
+                when (it) {
+
+                    is Resource.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
                     }
-                    is Resource.Error ->{
-                        Log.e(TAG, "onViewCreated: ${it.message.toString()}" )
+
+
+                    is Resource.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        it.data?.let { testModelArrayList ->
+
+                            testList.addAll(testModelArrayList)
+
+                            adapter.asyncListDiffer.submitList(testModelArrayList)
+
+
+                        }
+
+                    }
+                    is Resource.Error -> {
+                        binding.progressBar.visibility = View.GONE
+                        Log.e(TAG, "onViewCreated: ${it.message.toString()}")
                     }
                     else -> {}
                 }
             }
         }
 
-        setUpRecyclerView()
+        testViewModel.loadTopScore(testList)
+
+        lifecycleScope.launchWhenStarted {
+            testViewModel.topScore.collectLatest { result ->
+                when (result) {
+
+                    is Resource.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
+
+                    is Resource.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        result.data?.let {
+//                            testList[testPosition].topScore = it
+                            topScore = it
+                            Log.v(TAG, "top score is $it")
+                        }
+                    }
+                    is Resource.Error -> {
+                        binding.progressBar.visibility = View.GONE
+                        Log.e(TAG, "top score error: ${result.message.toString()}")
+                    }
+                    else -> {}
+                }
+            }
+        }
 
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        testList.clear()
     }
 
     private fun setUpRecyclerView() {
@@ -88,6 +140,21 @@ class TestFragment : Fragment() {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = this@TestFragment.adapter
 
+            onItemClick { _, position, _ ->
+
+                testPosition = position
+
+                findNavController().navigate(
+                    TestFragmentDirections.actionTestFragmentToStartTestFragment(
+                        testList = testList.toTypedArray(),
+                        testPosition = position,
+                        categoryIndex = args.categoryIndex,
+                        categoryName = args.categoryName,
+                        testTime = testList[position].time.toString()
+                    )
+                )
+
+            }
         }
     }
 

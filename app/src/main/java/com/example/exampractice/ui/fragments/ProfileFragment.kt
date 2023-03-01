@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.exampractice.databinding.FragmentProfileBinding
+import com.example.exampractice.ui.activites.HomeActivity
 import com.example.exampractice.ui.activites.MainActivity
 import com.example.exampractice.viewmodels.CredentialsViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -33,6 +34,9 @@ class ProfileFragment : Fragment() {
 
     private val viewModel by viewModels<CredentialsViewModel>()
 
+    private var userName: String? = null
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,13 +44,21 @@ class ProfileFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
+
+
+       this@ProfileFragment.userName = (requireActivity() as HomeActivity).userName
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.logoutButton.setOnClickListener {
+
+
+        binding.profileTv.text = userName?.uppercase()?.substring(0, 1)
+        binding.profileNameTv.text = userName
+        binding.logoutLL.setOnClickListener {
 
 
             val currentUser = firebaseAuth.currentUser ?: return@setOnClickListener

@@ -1,8 +1,10 @@
 package com.example.exampractice.viewmodels
 
 import android.util.ArrayMap
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.exampractice.models.RankModel
 import com.example.exampractice.models.User
 import com.example.exampractice.util.RegisterValidation
 import com.example.exampractice.util.Resource
@@ -44,8 +46,19 @@ class CredentialsViewModel @Inject constructor(
     private val _updateUserInfo = MutableStateFlow<Resource<Boolean>>(Resource.Ideal())
     val updateUserInfo: Flow<Resource<Boolean>> get() = _updateUserInfo
 
+    private var _myPerformance = MutableStateFlow<Resource<RankModel>>(Resource.Ideal())
+    val myPerformance: Flow<Resource<RankModel>> get() = _myPerformance
 
-    // SignUp code
+    companion object {
+        var myPerformanceLocal = RankModel(null, 0, -1)
+    }
+
+
+    private var _user = MutableStateFlow<Resource<User>>(Resource.Ideal())
+    val user: Flow<Resource<User>> get() = _user
+
+
+    //====================== SignUp code ======================//
 
     fun createAccountWithEmailAndPassword(
         user: User,
@@ -134,6 +147,40 @@ class CredentialsViewModel @Inject constructor(
         }
 
 
+    }
+
+    fun getUserData() {
+
+        _myPerformance.value = Resource.Loading()
+
+        var user: User
+
+        firestore.collection("USERS")
+            .document(firebaseAuth.currentUser?.uid.toString())
+            .get()
+            .addOnSuccessListener {
+
+                viewModelScope.launch {
+
+                    user = User(
+                        userName = it.getString("NAME").toString(),
+                        email = it.getString("EMAIL").toString()
+                    )
+
+                    Log.d(TAG, "getUserData: total score ${it.getLong("TOTAL_SCORE")!!.toInt()}")
+
+                    myPerformanceLocal.score = (it.getLong("TOTAL_SCORE")!!.toInt())
+
+                    _myPerformance.emit(Resource.Success(myPerformanceLocal))
+                    _user.emit(Resource.Success(user))
+                }
+
+            }.addOnFailureListener {
+                viewModelScope.launch {
+                    _myPerformance.emit(Resource.Error(it.message.toString()))
+                    _user.emit(Resource.Error(it.message.toString()))
+                }
+            }
     }
 
     // Login

@@ -43,14 +43,14 @@ class CategoryAdapter() : BaseAdapter() {
 
         holder.binding.root.setOnClickListener {
             it.findNavController().navigate(CategoryFragmentDirections.actionCategoryFragmentToTestFragment(
-                categoryList[position].name,categoryList[position].id,position
+                categoryList[position].name,position
             ))
         }
 
         return holder.binding.root
     }
 
-    internal class ViewHolder(val binding: CategoryItemLayoutBinding)
+    inner class ViewHolder(val binding: CategoryItemLayoutBinding)
 }
 
 

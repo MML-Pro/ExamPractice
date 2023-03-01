@@ -4,20 +4,329 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/mainBackgroundColor"
     tools:context="com.example.exampractice.ui.fragments.ProfileFragment">
 
 
-    <Button
-        android:id="@+id/logout_button"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/ll1"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="LogOut"
+        android:background="@color/blue_500"
+        android:orientation="vertical"
+        android:paddingTop="32dp"
+        android:paddingBottom="90dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                app:cardCornerRadius="45dp">
+
+                <ImageView
+                    android:id="@+id/profileIv"
+                    android:layout_width="@dimen/_80sdp"
+                    android:layout_height="@dimen/_80sdp"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/profileTv"
+                    android:layout_width="@dimen/_60sdp"
+                    android:layout_height="@dimen/_60sdp"
+                    android:background="@drawable/circle"
+                    android:gravity="center"
+                    android:text="A"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_25ssp"
+                    android:textStyle="bold">
+
+                </TextView>
+
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/profileNameTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="8dp"
+                android:text="Name"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14ssp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="0dp"
+        android:layout_marginBottom="46dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/ll1"
+        android:layout_height="1dp"
+        android:visibility="invisible"
+        android:background="@color/blue_500" />
+
+    <LinearLayout
+        android:id="@+id/ll2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/round_rectangle"
+        android:elevation="5dp"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider2">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:text="RANK"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14ssp">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/myRankTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:text="NA"
+                android:textColor="@color/blue_500"
+                android:textSize="@dimen/_16ssp">
+
+            </TextView>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:text="OVERALL SCORE"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14ssp">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/myScoreTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:text="0"
+                android:textColor="@color/blue_500"
+                android:textSize="@dimen/_16ssp">
+
+            </TextView>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical"
+        android:padding="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/ll2">
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/savedQuestionsLL"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <ImageView
+                    android:src="@drawable/bookmark"
+                    android:layout_width="@dimen/_25sdp"
+                    android:layout_height="@dimen/_25sdp">
+
+                </ImageView>
+
+                <TextView
+                    android:text="Saved questions"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="8dp"
+                    android:textSize="@dimen/_12ssp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                </TextView>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/leaderboardLL"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <ImageView
+                    android:src="@drawable/trophy"
+                    android:layout_width="@dimen/_25sdp"
+                    android:layout_height="@dimen/_25sdp">
+
+                </ImageView>
+
+                <TextView
+                    android:text="Leaderboard"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="8dp"
+                    android:textSize="@dimen/_12ssp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+
+
+                </TextView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="?android:attr/listDivider" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/profileLL"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <ImageView
+                    android:src="@drawable/ic_account"
+                    android:layout_width="@dimen/_25sdp"
+                    android:layout_height="@dimen/_25sdp"
+                    app:tint="@color/blue_500">
+
+                </ImageView>
+
+                <TextView
+                    android:text="My Profile"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="8dp"
+                    android:textSize="@dimen/_12ssp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                </TextView>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/logoutLL"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <ImageView
+                    android:src="@drawable/ic_lock_open"
+                    android:layout_width="@dimen/_25sdp"
+                    android:layout_height="@dimen/_25sdp">
+
+                </ImageView>
+
+                <TextView
+                    android:text="Logout"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="8dp"
+                    android:textSize="@dimen/_12ssp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+
+
+                </TextView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
