@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +22,7 @@ import com.example.exampractice.util.onItemClick
 import com.example.exampractice.viewmodels.TestViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 private const val TAG = "TestFragment"
@@ -41,7 +44,7 @@ class TestFragment : Fragment() {
 
     private var testPosition: Int = 0
 
-    private var topScore:Int=0
+    private var topScore: Int = 0
 //    }
 
 
@@ -101,29 +104,34 @@ class TestFragment : Fragment() {
 
         testViewModel.loadTopScore(testList)
 
-        lifecycleScope.launchWhenStarted {
-            testViewModel.topScore.collectLatest { result ->
-                when (result) {
+        lifecycleScope.launch {
 
-                    is Resource.Loading -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                    }
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                testViewModel.topScore.collectLatest { result ->
+                    when (result) {
 
-                    is Resource.Success -> {
-                        binding.progressBar.visibility = View.GONE
-                        result.data?.let {
-//                            testList[testPosition].topScore = it
-                            topScore = it
-                            Log.v(TAG, "top score is $it")
+                        is Resource.Loading -> {
+                            binding.progressBar.visibility = View.VISIBLE
                         }
+
+                        is Resource.Success -> {
+                            binding.progressBar.visibility = View.GONE
+                            result.data?.let {
+//                            testList[testPosition].topScore = it
+                                topScore = it
+                                Log.v(TAG, "top score is $it")
+                            }
+                        }
+                        is Resource.Error -> {
+                            binding.progressBar.visibility = View.GONE
+                            Log.e(TAG, "top score error: ${result.message.toString()}")
+                        }
+                        else -> {}
                     }
-                    is Resource.Error -> {
-                        binding.progressBar.visibility = View.GONE
-                        Log.e(TAG, "top score error: ${result.message.toString()}")
-                    }
-                    else -> {}
                 }
             }
+
+
         }
 
 

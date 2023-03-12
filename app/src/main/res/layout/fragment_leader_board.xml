@@ -56,7 +56,7 @@
     <LinearLayout
         android:id="@+id/ll2"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:background="@color/mainBackgroundColor"
         android:elevation="3dp"

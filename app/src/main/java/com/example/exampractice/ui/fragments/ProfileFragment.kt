@@ -6,17 +6,25 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.exampractice.databinding.FragmentProfileBinding
+import com.example.exampractice.models.RankModel
 import com.example.exampractice.ui.activites.HomeActivity
 import com.example.exampractice.ui.activites.MainActivity
+import com.example.exampractice.util.Resource
 import com.example.exampractice.viewmodels.CredentialsViewModel
+import com.example.exampractice.viewmodels.LeaderboardViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "ProfileFragment"
@@ -32,10 +40,13 @@ class ProfileFragment : Fragment() {
 
     private lateinit var googleSignInClient: GoogleSignInClient
 
-    private val viewModel by viewModels<CredentialsViewModel>()
+    private val credentialsViewModel by viewModels<CredentialsViewModel>()
+
+    private val leaderboardViewModel by viewModels<LeaderboardViewModel>()
 
     private var userName: String? = null
 
+    var myPerformanceLocal = RankModel(null, 0, -1)
 
 
     override fun onCreateView(
@@ -46,13 +57,56 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
 
 
-       this@ProfileFragment.userName = (requireActivity() as HomeActivity).userName
+        this@ProfileFragment.userName = (requireActivity() as HomeActivity).userName
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        credentialsViewModel.getUserData()
+
+        lifecycleScope.launch {
+
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                credentialsViewModel.myPerformance.collectLatest { result ->
+                    when (result) {
+                        is Resource.Loading -> {
+                            binding.progressBar2.visibility = View.VISIBLE
+                        }
+                        is Resource.Success -> {
+
+                            result.data?.let {
+                                myPerformanceLocal.score = it.score
+
+
+                                leaderboardViewModel.getTopUsers(myPerformanceLocal)
+
+
+                            }
+
+                            binding.apply {
+                                progressBar2.visibility = View.GONE
+                                myScoreTv.text = myPerformanceLocal.score.toString()
+                                myRankTv.text = myPerformanceLocal.rank.toString()
+                            }
+
+                        }
+
+                        is Resource.Error -> {
+                            binding.progressBar2.visibility = View.GONE
+                            Log.e(TAG, "onViewCreated: ${result.message.toString()}")
+                        }
+                        else -> {}
+                    }
+                }
+            }
+
+
+        }
+
 
 
 
@@ -73,7 +127,7 @@ class ProfileFragment : Fragment() {
                         )
                         googleSignInClient = GoogleSignIn.getClient(
                             requireActivity(),
-                            viewModel.getGoogleSignInOptions()
+                            credentialsViewModel.getGoogleSignInOptions()
                         )
 
                         firebaseAuth.signOut()
@@ -82,7 +136,7 @@ class ProfileFragment : Fragment() {
 
                             if (it.isSuccessful) {
                                 redirectToMainActivity()
-                            }else {
+                            } else {
                                 return@addOnCompleteListener
                             }
                         }
